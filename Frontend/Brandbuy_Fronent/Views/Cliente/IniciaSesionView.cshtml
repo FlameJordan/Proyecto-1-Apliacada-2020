@@ -1,0 +1,37 @@
+﻿@{
+    ViewData["Title"] = "IniciarSesion";
+    Layout = "_Layout";
+}
+@model String
+
+<CENTER>
+
+    <div content="width=device-widt" class="row">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-6">
+            <form id="iniciaSesion" asp-action="IniciarSesion" method="POST">
+                <h1>Iniciar Sesion</h1>
+
+                @if (Model != null)
+                {
+                    <div class="alert alert-success" id="al1" role="alert" style="display: block; text-align:center">
+                        @Model
+                    </div>
+                    <br>
+                }
+
+                <input type="text" style=" margin-bottom: 15px;" class="form-control" id="NombreC" name="NombreC"
+                       placeholder="Nombre de usuario" required />
+                <input type="password" style="margin-bottom: 15px;" class="form-control" id="PasswordC"
+                       name="PasswordC"
+                       placeholder="Contraseña"
+                       required />
+
+                <button type="submit" class="btn btn-success">Iniciar Sesión</button>
+
+            </form>
+        </div>
+        <div class="col-sm-3"></div>
+        <br>
+    </div>
+</CENTER>

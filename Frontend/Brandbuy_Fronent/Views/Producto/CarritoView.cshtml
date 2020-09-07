@@ -1,0 +1,102 @@
+﻿@{
+    ViewData["Title"] = "Productos";
+    Layout = "_LayoutTienda";
+}
+
+@model CarritoProductos
+
+    <div id="inicio">
+
+        <form asp-action="PagoView" method="POST">
+
+            <div class="col-sm-7">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Precio unidad</th>
+                            <th>Precio cantidad</th>
+                            <th>Eliminar</th>
+
+                        </tr>
+                    <thead>
+                    <tbody>
+
+                        @if (1 == 1) { 
+                        
+                            var cont = 1;
+
+
+                        @foreach (Productos temp in Model.productos)
+                        {
+
+                            var idT = "T" + cont;
+                            var idPr = "P" + cont;
+                            var idC = "C" + cont;
+                            var idCont = "idFila" + @temp.idCont;
+                            var idP = "idP" + cont;
+                            var idE = "idE" + cont;
+                            var idF = "idF" + cont;
+                            <form asp-action="ComprarCarrito" method="POST">
+
+                                <tr id="@idF" name="@idF">
+
+                                    <td>
+                                        <Label>@temp.nombre</Label><br>
+                                        <img src="@temp.imagen" width="70" height="60"><br>
+
+                                    </td>
+
+                                    <td>
+                                        <div>
+                                            <input type="text" class="form-control" id="@idC" name="@idC" value="@temp.cantstock" style="width : 60px;">
+                                            <input type="hidden" class="form-control" id="@idCont" name="cant" value="@temp.cantstock" />
+                                        </div><br>
+                                        <div>
+
+                                            <input type="button" name="Aumenta" class="btn btn-secondary" style="width : 8px;" value="+"
+                                                   onclick="aumentar('@idCont','@idPr', '@idT', '@idC', $('#@idP').val(),  $('#@idE').val(), 1 )" />
+
+                                            <input type="button" name="Disminuye" class="btn btn-secondary" style="width : 8px;" value="-"
+                                                   onclick="disminuir('@idCont','@idPr', '@idT', '@idC', $('#@idP').val(),  $('#@idE').val(), 2)" />
+
+                                        </div><br>
+                                    </td>
+
+                                    <td>
+                                        <input type="text" class="form-control" id="precio" name="precio" value="@temp.precio"  style="width : 100px;"/>
+
+                                    </td>
+
+                                    <td>
+                                        <input type="hidden" class="form-control" id="@idPr" name="@idPr" value="@temp.precio" />
+
+                                        <input type="text" class="form-control" id="@idT" name="@idT" value="@temp.total" style="width : 100px;">
+
+                                    </td>
+
+                                    <td>
+                                        <input type="hidden" class="form-control" id="@idP" name="@idP" value="@temp.idproducto" />
+                                        <input type="hidden" class="form-control" id="@idE" name="@idE" value="@temp.idempresa" />
+                                        <input type="button" name="carrito" class="btn btn-warning" value="Eliminar" onclick="EliminaCarrito($('#@idP').val(), $('#@idE').val(), '@idF', $('#@idT').val() )">
+                                    </td>
+
+                                </tr>
+                            </form>
+
+                            cont++;
+                        }
+                        }
+
+                    </tbody>
+                </table>
+
+            </div><br>
+            <div class="col-sm-5">
+                <label>Monto a Pagar ₡  </label>
+                <input type="text" class="form-control" id="subtotal" name="subtotal" value="@Model.totalTodosProductos" style="width : 100px;"><br>
+                <input type="submit" class="btn btn-success" value="Comprar">
+            </div>
+        </form>
+    </div>

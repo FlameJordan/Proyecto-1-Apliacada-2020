@@ -1,0 +1,44 @@
+﻿@{
+    ViewData["Title"] = "Pagar";
+    Layout = "_LayoutTienda";
+}
+
+@model string
+<CENTER>
+
+    <div content="width=device-widt" class="row">
+
+            <form id="contenedorPago" class="col-sm-12" style="margin-top:50px; margin-bottom:100px;" form asp-action="ComprarCarrito" method="POST" >
+
+                <div id="infoC" class="col-sm-4">
+
+                    <h2>Finalizar compra</h2><br>
+
+                    <h3>Monto total a pagar  ₡ @Model</h3><br>
+                </div>
+                <div class="col-sm-1"></div>
+
+                <div class="col-sm-7">
+                    <h2>Pago con tarjeta   <img src="/img/visa.png" alt="Visa" width="50" height="25">  <img src="/img/mastercard.png" alt="masterCard" width="50" height="35"></h2><br>
+
+                    <div class="col-sm-7">
+                        <h3>Número de tarjeta</h3>
+                        <input class="form-control" placeholder="**** **** **** ****" type="text" maxlength="19" minlength="16" id="numTarj" name="numTarj" required /><br>
+
+
+                        <h3>Fecha de vencimiento</h3>
+                        <input class="form-control" type="month" id="fechaV" name="fechaV" required /><br>
+
+
+                        <h3>CVV</h3>
+                        <input class="form-control" placeholder="3 digitos" maxlength="3" minlength="3" type="password" id="cvv" name="cvv" required /><br>
+
+                        <input class="btn btn-primary" type="submit" id="buscarN" name="buscarN" value="Realizar Pago" />
+                    </div>
+
+                </div>
+
+            </form>
+        <br>
+    </div>
+</CENTER>
