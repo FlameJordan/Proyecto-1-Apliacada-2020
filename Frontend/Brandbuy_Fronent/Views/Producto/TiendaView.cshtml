@@ -1,0 +1,103 @@
+﻿@{
+    ViewData["Title"] = "Productos";
+    Layout = "_LayoutTienda";
+}
+
+@model List<Productos>
+
+    <div id="inicio">
+
+        <form asp-action="BuscaNombre" method="POST">
+            <div class="row">
+                <div class="col-sm-3" style=" margin-top: 5px;">
+                    <input type="text" class="form-control" id="BuscarN" name="BuscarN">
+                </div>
+                <div class="col-sm-3" style=" margin-top: 5px;">
+                    <button type="submit" class="btn btn-success">Buscar por nombre</button>
+                </div>
+
+            </div>
+        </form><br>
+
+        <div class="col-sm-5">
+            <label>Sugerencias</label>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Detalles</th>
+
+                    </tr>
+                <thead>
+                <tbody>
+
+
+                    @foreach (Productos temp in Model)
+                    {
+                        <form asp-action="DetalleProductoView" method="POST">
+                            <tr>
+
+                                <td>
+                                    <label>@temp.nombre</label><br>
+                                    <img src="@temp.imagen" width="70" height="60"><br>
+
+                                    <label>@temp.precio</label>
+
+                                </td>
+                                <td>
+                                    <input type="hidden" class="form-control" id="idP" name="idP" value="@temp.idproducto" />
+                                    <input type="hidden" class="form-control" id="idE" name="idE" value="@temp.idempresa" />
+
+                                    <input type="submit" class="btn btn-success" value="Ver más">
+                                </td>
+
+                            </tr>
+                        </form>
+                    }
+
+                </tbody>
+            </table>
+
+        </div>
+
+
+        <div class="col-sm-6">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Detalles</th>
+
+                    </tr>
+                <thead>
+                <tbody>
+
+
+                    @foreach (Productos temp in Model)
+                    {
+                        <form asp-action="DetalleProductoView" method="POST">
+                            <tr>
+
+                                <td>
+                                    <label>@temp.nombre</label><br>
+                                    <img src="@temp.imagen" width="70" height="60"><br>
+
+                                    <label>@temp.precio</label>
+
+                                </td>
+                                <td>
+                                    <input type="hidden" class="form-control" id="idP" name="idP" value="@temp.idproducto" />
+                                    <input type="hidden" class="form-control" id="idE" name="idE" value="@temp.idempresa" />
+
+                                    <input type="submit" class="btn btn-success" value="Ver más">
+                                </td>
+
+                            </tr>
+                        </form>
+                    }
+
+                </tbody>
+            </table>
+
+        </div>
+    </div>

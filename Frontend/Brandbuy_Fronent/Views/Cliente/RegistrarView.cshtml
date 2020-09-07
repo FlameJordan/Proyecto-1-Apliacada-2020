@@ -1,0 +1,45 @@
+﻿@{
+    ViewData["Title"] = "Registrar";
+    Layout = "_Layout";
+}
+
+@model String
+<div>
+    <center>
+        <form id="registraCliente" asp-action="RegistrarCliente" method="POST">
+
+
+            <h1>Registrar Cliente</h1>    <br>
+
+            @if (Model != null)
+            {
+                <div class="alert alert-success" id="al1" role="alert" style="display: block; text-align:center">
+                    @Model
+                </div>
+                <br>
+            }
+
+            <div class="row">
+                <div class="col-sm-3"></div>
+                <div class="col-sm-6">
+
+                    <input type="text" style=" margin-bottom: 15px;" class="form-control" id="NombreC" name="NombreC"
+                           placeholder="Nombre Usuario" required /><br>
+
+                    <input type="email" style=" margin-bottom: 15px;" class="form-control" id="Correo" name="Correo"
+                           placeholder="Correo Electrónico" required /><br>
+
+                    <input type="password" style=" margin-bottom: 15px;" class="form-control" id="PasswordC" name="PasswordC"
+                           placeholder="Contraseña" required /><br>
+
+                    <button type="submit" class="btn btn-success">Registrar</button>
+
+                </div>
+
+
+                <div class="col-sm-3"></div>
+
+            </div>
+        </form>
+    </center>
+</div>
