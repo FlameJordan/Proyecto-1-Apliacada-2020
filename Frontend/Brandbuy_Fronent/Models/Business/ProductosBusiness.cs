@@ -25,12 +25,20 @@ namespace Brandbuy_Fronent.Models.Business
             return productos;
         }
 
-        public Productos DetalleProductos(string idP, string idE)
+        public List<Categoria> ListarCategorias()
+        {
+            ProductosData productoData = new ProductosData(this.Configuration);
+            List<Categoria> categoria = new List<Categoria>();
+            categoria = productoData.ListarCategorias();
+            return categoria;
+        }
+
+        public Productos DetalleProductos(string idP, string idE, string idC)
         {
 
             ProductosData productoData = new ProductosData(this.Configuration);
             Productos productos = new Productos();
-            productos = productoData.DetalleProductos(idP, idE);
+            productos = productoData.DetalleProductos(idP, idE, idC);
             return productos;
         }
 
@@ -72,5 +80,24 @@ namespace Brandbuy_Fronent.Models.Business
 
             productoData.ComprarCarrito(idC);
         }
+
+        public List<Productos> buscarProducto(string idT, string idC)
+        {
+            ProductosData productoData = new ProductosData(this.Configuration);
+            List<Productos> productos = new List<Productos>();
+            productos=productoData.ListarProductosBuscados(idT, idC);
+
+            return productos;
+        }
+
+        public List<Productos> ListarProductosSugeridos(string idC)
+        {
+            ProductosData productoData = new ProductosData(this.Configuration);
+            List<Productos> productosS = new List<Productos>();
+            productosS = productoData.ListarProductosSugeridos(idC);
+
+            return productosS;
+        }
+
     }
 }

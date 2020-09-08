@@ -15,6 +15,7 @@ namespace Brandbuy_Fronent.Models
         public string tipo { get; set; }
         public string imagen { get; set; }
         public int cantstock { get; set; }
+        public int cantSolicit { get; set; }
         public string estado { get; set; }
         public string idCont { get; set; }
         public float total { get; set; }

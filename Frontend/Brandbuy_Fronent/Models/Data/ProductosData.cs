@@ -17,7 +17,7 @@ namespace Brandbuy_Fronent.Models.Data
         }
 
        
-        public List<Productos> ListarProductos() //modificar
+        public List<Productos> ListarProductos()
         {
             List<Productos> productos = new List<Productos>();
             NpgsqlConnection conexion = new NpgsqlConnection();
@@ -61,7 +61,42 @@ namespace Brandbuy_Fronent.Models.Data
             return productos;
         }
 
-        public Productos DetalleProductos(string idP, string idE) //modificar
+        public List<Categoria> ListarCategorias()
+        {
+            List<Categoria> categoria = new List<Categoria>();
+            NpgsqlConnection conexion = new NpgsqlConnection();
+
+            string cadenaDeConexion = Configuration["ConnectionStrings:DefaultConnection"];
+
+            using (var connection = new NpgsqlConnection(cadenaDeConexion))
+            {
+                connection.Open();
+
+                string sql = $"Select * from obtenerCategorias()";
+
+                using (var command = new NpgsqlCommand(sql, connection))
+                {
+                    using (var dataReader = command.ExecuteReader())
+                    {
+                        while (dataReader.Read())
+                        {
+
+                            Categoria temp = new Categoria();
+                            temp.idproducto = dataReader["idproductoT"].ToString();
+                            temp.NombreT = dataReader["nombreTipoT"].ToString();
+
+                            categoria.Add(temp);
+
+                        }
+
+                    }
+                }
+                connection.Close();
+            }
+
+            return categoria;
+        }
+        public Productos DetalleProductos(string idP, string idE, string idC) //modificar
         {
             Productos productos = new Productos();
 
@@ -73,7 +108,7 @@ namespace Brandbuy_Fronent.Models.Data
             {
                 connection.Open();
 
-                string sql = $"Select * from detalleProducto('{idP}','{idE}')";
+                string sql = $"Select * from detalleProducto('{idP}','{idE}','{idC}')";
 
                 using (var command = new NpgsqlCommand(sql, connection))
                 {
@@ -166,8 +201,9 @@ namespace Brandbuy_Fronent.Models.Data
                             temp.idCont = "idCont" + idCont;
                            
                             //temp.descripcion = dataReader["descripcionT"].ToString();
-                            temp.cantstock = Convert.ToInt32(dataReader["cantidadProductosT"].ToString());
-                            temp.total = (int) temp.precio * (int)temp.cantstock;
+                            temp.cantSolicit = Convert.ToInt32(dataReader["cantidadProductosT"].ToString());
+                            temp.cantstock = Convert.ToInt32(dataReader["cantidadstockT"].ToString());
+                            temp.total = (int) temp.precio * (int)temp.cantSolicit;
                             //temp.estado = dataReader["estadoT"].ToString();
                             montoTotal += temp.total;
 
@@ -268,6 +304,93 @@ namespace Brandbuy_Fronent.Models.Data
                 connection.Close();
             }
         }
+
+        public List<Productos> ListarProductosBuscados(string idT, string idC)
+        {
+            List<Productos> productos = new List<Productos>();
+            NpgsqlConnection conexion = new NpgsqlConnection();
+            var idCont = 1;
+            string cadenaDeConexion = Configuration["ConnectionStrings:DefaultConnection"];
+
+            using (var connection = new NpgsqlConnection(cadenaDeConexion))
+            {
+                connection.Open();
+
+                string sql = $"Select * from obtenerProductosPorTipo('{idT}')";
+
+                using (var command = new NpgsqlCommand(sql, connection))
+                {
+                    using (var dataReader = command.ExecuteReader())
+                    {
+                        while (dataReader.Read())
+                        {
+
+                            Productos temp = new Productos();
+                            System.Diagnostics.Debug.WriteLine("repuesta*************" + dataReader["idproductoT"].ToString());
+                            temp.idproducto = dataReader["idproductoT"].ToString();
+                            temp.idempresa = dataReader["idempresaT"].ToString();
+                            temp.nombre = dataReader["nombreT"].ToString();
+                            temp.precio = Convert.ToInt32(dataReader["precioT"].ToString());
+                            temp.imagen = "\\img\\" + dataReader["imagenT"].ToString();
+                            temp.idCont = "idCont" + idCont;
+
+                            temp.total = 0;
+                
+                            productos.Add(temp);
+                            idCont = idCont + 1;
+                        }
+
+                    }
+                }
+                connection.Close();
+            }
+
+            return productos;
+        }
+
+        public List<Productos> ListarProductosSugeridos(string idC)
+        {
+            List<Productos> productos = new List<Productos>();
+            NpgsqlConnection conexion = new NpgsqlConnection();
+            var idCont = 1;
+            string cadenaDeConexion = Configuration["ConnectionStrings:DefaultConnection"];
+
+            using (var connection = new NpgsqlConnection(cadenaDeConexion))
+            {
+                connection.Open();
+
+                string sql = $"Select * from obtenerProductosSugeridos('{idC}')";
+
+                using (var command = new NpgsqlCommand(sql, connection))
+                {
+                    using (var dataReader = command.ExecuteReader())
+                    {
+                        while (dataReader.Read())
+                        {
+
+                            Productos temp = new Productos();
+                            System.Diagnostics.Debug.WriteLine("repuesta*************" + dataReader["idproductoT"].ToString());
+                            temp.idproducto = dataReader["idproductoT"].ToString();
+                            temp.idempresa = dataReader["idempresaT"].ToString();
+                            temp.nombre = dataReader["nombreT"].ToString();
+                            temp.precio = Convert.ToInt32(dataReader["precioT"].ToString());
+                            temp.imagen = "\\img\\" + dataReader["imagenT"].ToString();
+                            temp.idCont = "idContaS" + idCont;
+
+                            temp.total = 0;
+
+                            productos.Add(temp);
+                            idCont = idCont + 1;
+                        }
+
+                    }
+                }
+                connection.Close();
+            }
+
+            return productos;
+        }
+
 
     }
 }

@@ -3,7 +3,6 @@ function AgregarCarrito(idP, idE, cant) {
     var parametros = {
         "idP": idP, "idE": idE, "cant": cant
     };
-    alert("idP" + idP + "idE" + idE + "cant" + cant);
 
     $.ajax(
         {
@@ -20,9 +19,8 @@ function AgregarCarrito(idP, idE, cant) {
     );
 }
 
-function aumentar(c, p, t, ca, idP, idE, asc) { // se crean la funcion y se agrega al evento onclick en en la etiqueta button con id aumentar
-    cantStock = 10;
-    alert('Pro' + idP + 'idE' + idE);
+function aumentar(c, p, t, ca, idP, idE, asc, idCantS) { // se crean la funcion y se agrega al evento onclick en en la etiqueta button con id aumentar
+    cantStock = document.getElementById(idCantS).value;
     inicio = document.getElementById(c).value;
     var cantidad = document.getElementById(c).value = ++inicio; //se obtiene el valor del input, y se incrementa en 1 el valor que tenga.
 
@@ -50,7 +48,7 @@ function aumentar(c, p, t, ca, idP, idE, asc) { // se crean la funcion y se agre
                     $("#mensaje").html("Procesando, \n\ espere por favor...");
                 },
                 success: function (response) {
-                    alert("Se agregó al carrito ");
+
                 }
             }
         );
@@ -89,7 +87,7 @@ function disminuir(c, p, t, ca, idP, idE, asc) { // se crean la funcion y se agr
                     $("#mensaje").html("Procesando, \n\ espere por favor...");
                 },
                 success: function (response) {
-                    alert("Se agregó al carrito ");
+                    
                 }
             }
         );

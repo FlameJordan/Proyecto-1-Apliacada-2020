@@ -38,6 +38,7 @@
                             var idP = "idP" + cont;
                             var idE = "idE" + cont;
                             var idF = "idF" + cont;
+                            var idCantS = "idCS" + cont;
                             <form asp-action="ComprarCarrito" method="POST">
 
                                 <tr id="@idF" name="@idF">
@@ -50,13 +51,13 @@
 
                                     <td>
                                         <div>
-                                            <input type="text" class="form-control" id="@idC" name="@idC" value="@temp.cantstock" style="width : 60px;">
-                                            <input type="hidden" class="form-control" id="@idCont" name="cant" value="@temp.cantstock" />
+                                            <input type="text" class="form-control" id="@idC" name="@idC" value="@temp.cantSolicit" style="width : 60px;">
+                                            <input type="hidden" class="form-control" id="@idCont" name="cant" value="@temp.cantSolicit" />
                                         </div><br>
                                         <div>
 
                                             <input type="button" name="Aumenta" class="btn btn-secondary" style="width : 8px;" value="+"
-                                                   onclick="aumentar('@idCont','@idPr', '@idT', '@idC', $('#@idP').val(),  $('#@idE').val(), 1 )" />
+                                                   onclick="aumentar('@idCont', '@idPr', '@idT', '@idC', $('#@idP').val(), $('#@idE').val(), 1, '@idCantS' )" />
 
                                             <input type="button" name="Disminuye" class="btn btn-secondary" style="width : 8px;" value="-"
                                                    onclick="disminuir('@idCont','@idPr', '@idT', '@idC', $('#@idP').val(),  $('#@idE').val(), 2)" />
@@ -79,6 +80,7 @@
                                     <td>
                                         <input type="hidden" class="form-control" id="@idP" name="@idP" value="@temp.idproducto" />
                                         <input type="hidden" class="form-control" id="@idE" name="@idE" value="@temp.idempresa" />
+                                        <input type="hidden" class="form-control" id="@idCantS" name="@idCantS" value="@temp.cantstock" />
                                         <input type="button" name="carrito" class="btn btn-warning" value="Eliminar" onclick="EliminaCarrito($('#@idP').val(), $('#@idE').val(), '@idF', $('#@idT').val() )">
                                     </td>
 
