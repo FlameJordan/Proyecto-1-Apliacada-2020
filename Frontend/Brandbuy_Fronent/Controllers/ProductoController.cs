@@ -30,13 +30,22 @@ namespace Brandbuy_Fronent.Controllers
 
         public ActionResult TiendaView()
         {
-            System.Diagnostics.Debug.WriteLine("repuesta******ssssssssssss*******" + (string)HttpContext.Session.GetString("idC"));
+            var idC = (string)HttpContext.Session.GetString("idC");
             ProductosBusiness productoBusiness = new ProductosBusiness(this.Configuration);
             List<Productos> productos = new List<Productos>();
-
+            List<Categoria> categoria = new List<Categoria>();
             productos = productoBusiness.ListarProductos();
+            categoria = productoBusiness.ListarCategorias();
 
-            return View("TiendaView", productos);
+            List<Productos> productosSug = new List<Productos>();
+            productosSug = productoBusiness.ListarProductosSugeridos(idC);
+
+            Productos_Categorias pC = new Productos_Categorias();
+            pC.productos = productos;
+            pC.categorias = categoria;
+            pC.productosSug = productosSug;
+
+            return View("TiendaView", pC);
            
 
         }
@@ -45,8 +54,9 @@ namespace Brandbuy_Fronent.Controllers
         {
             ProductosBusiness productoBusiness = new ProductosBusiness(this.Configuration);
             Productos productos = new Productos();
+            var idC = (string)HttpContext.Session.GetString("idC");
 
-            productos = productoBusiness.DetalleProductos(idP, idE);
+            productos = productoBusiness.DetalleProductos(idP, idE, idC);
 
             return View("DetalleProductoView", productos);
 
@@ -125,6 +135,26 @@ namespace Brandbuy_Fronent.Controllers
 
         }
 
+        public ActionResult buscarProducto(string BuscarN)
+        {
+            ProductosBusiness productoBusiness = new ProductosBusiness(this.Configuration);
+
+            var idC = (string)HttpContext.Session.GetString("idC");
+            List<Productos> productos = new List<Productos>();
+            productos = productoBusiness.buscarProducto(BuscarN, idC);
+            List<Categoria> categoria = new List<Categoria>();
+            categoria = productoBusiness.ListarCategorias();
+
+            List<Productos> productosSug = new List<Productos>();
+            productosSug = productoBusiness.ListarProductosSugeridos(idC);
+
+            Productos_Categorias pC = new Productos_Categorias();
+            pC.productos = productos;
+            pC.categorias = categoria;
+            pC.productosSug = productosSug;
+
+            return View("TiendaView", pC);
+        }
 
         // GET: ProductoController/Details/5
         public ActionResult Details(int id)

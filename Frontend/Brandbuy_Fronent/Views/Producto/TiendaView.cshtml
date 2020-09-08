@@ -3,14 +3,23 @@
     Layout = "_LayoutTienda";
 }
 
-@model List<Productos>
+@model Productos_Categorias
 
     <div id="inicio">
 
-        <form asp-action="BuscaNombre" method="POST">
+        <form asp-action="buscarProducto" method="POST">
             <div class="row">
                 <div class="col-sm-3" style=" margin-top: 5px;">
-                    <input type="text" class="form-control" id="BuscarN" name="BuscarN">
+
+                    <select id="BuscarN" class="form-control" name="BuscarN" required>
+
+                        @foreach (Categoria item in Model.categorias)
+                        {
+                            <option value="@item.idproducto">@item.NombreT</option>
+
+                        }
+
+                    </select>
                 </div>
                 <div class="col-sm-3" style=" margin-top: 5px;">
                     <button type="submit" class="btn btn-success">Buscar por nombre</button>
@@ -19,7 +28,7 @@
             </div>
         </form><br>
 
-        <div class="col-sm-5">
+        <div class="col-sm-3">
             <label>Sugerencias</label>
             <table class="table">
                 <thead>
@@ -32,21 +41,21 @@
                 <tbody>
 
 
-                    @foreach (Productos temp in Model)
+                    @foreach (Productos temp1 in Model.productosSug)
                     {
                         <form asp-action="DetalleProductoView" method="POST">
                             <tr>
 
                                 <td>
-                                    <label>@temp.nombre</label><br>
-                                    <img src="@temp.imagen" width="70" height="60"><br>
+                                    <label>@temp1.nombre</label><br>
+                                    <img src="@temp1.imagen" width="70" height="60"><br>
 
-                                    <label>@temp.precio</label>
+                                    <label>@temp1.precio</label>
 
                                 </td>
                                 <td>
-                                    <input type="hidden" class="form-control" id="idP" name="idP" value="@temp.idproducto" />
-                                    <input type="hidden" class="form-control" id="idE" name="idE" value="@temp.idempresa" />
+                                    <input type="hidden" class="form-control" id="idP" name="idP" value="@temp1.idproducto" />
+                                    <input type="hidden" class="form-control" id="idE" name="idE" value="@temp1.idempresa" />
 
                                     <input type="submit" class="btn btn-success" value="Ver más">
                                 </td>
@@ -60,44 +69,46 @@
 
         </div>
 
-
-        <div class="col-sm-6">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Producto</th>
-                        <th>Detalles</th>
-
-                    </tr>
-                <thead>
-                <tbody>
+        <div class="col-sm-2"></div>
 
 
-                    @foreach (Productos temp in Model)
-                    {
-                        <form asp-action="DetalleProductoView" method="POST">
-                            <tr>
+            <div class="col-sm-7">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Detalles</th>
 
-                                <td>
-                                    <label>@temp.nombre</label><br>
-                                    <img src="@temp.imagen" width="70" height="60"><br>
+                        </tr>
+                    <thead>
+                    <tbody>
 
-                                    <label>@temp.precio</label>
 
-                                </td>
-                                <td>
-                                    <input type="hidden" class="form-control" id="idP" name="idP" value="@temp.idproducto" />
-                                    <input type="hidden" class="form-control" id="idE" name="idE" value="@temp.idempresa" />
+                        @foreach (Productos temp in Model.productos)
+                        {
+                            <form asp-action="DetalleProductoView" method="POST">
+                                <tr>
 
-                                    <input type="submit" class="btn btn-success" value="Ver más">
-                                </td>
+                                    <td>
+                                        <label>@temp.nombre</label><br>
+                                        <img src="@temp.imagen" width="70" height="60"><br>
 
-                            </tr>
-                        </form>
-                    }
+                                        <label>@temp.precio</label>
 
-                </tbody>
-            </table>
+                                    </td>
+                                    <td>
+                                        <input type="hidden" class="form-control" id="idP" name="idP" value="@temp.idproducto" />
+                                        <input type="hidden" class="form-control" id="idE" name="idE" value="@temp.idempresa" />
 
+                                        <input type="submit" class="btn btn-success" value="Ver más">
+                                    </td>
+
+                                </tr>
+                            </form>
+                        }
+
+                    </tbody>
+                </table>
+
+            </div>
         </div>
-    </div>
