@@ -17,6 +17,7 @@ public class Producto {
     private int precio;
     private String descripcion;
     private int cantStock;
+    private int tipo;
     private int estado;
 
     public Producto() {
@@ -27,6 +28,7 @@ public class Producto {
         this.cantStock = 0;
         this.descripcion = "";
         this.cantStock = 0;
+        this.tipo=0;
         this.estado=0;
     }
 
@@ -58,6 +60,11 @@ public class Producto {
         return estado;
     }
 
+    public int getTipo() {
+        return tipo;
+    }
+    
+
     public void setIdProducto(int idProducto) {
         this.idProducto = idProducto;
     }
@@ -86,4 +93,9 @@ public class Producto {
         this.estado = estado;
     }
 
+    public void setTipo(int tipo) {
+        this.tipo = tipo;
+    }
+    
+    
 }

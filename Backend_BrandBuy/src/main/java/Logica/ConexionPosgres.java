@@ -23,10 +23,10 @@ public class ConexionPosgres {
 
     public void realizaConexion() {
       listaProducto = new ArrayList<>();
-        String urlDatabase = "jdbc:postgresql://localhost:5432/IF4100";
+        String urlDatabase = "jdbc:postgresql://163.178.107.7:5432/IF6201_Proyecto#1_Brandbuy";
         try {
             Class.forName("org.postgresql.Driver");
-            conSQL = DriverManager.getConnection(urlDatabase, "postgres", "gearsofwar98");
+            conSQL = DriverManager.getConnection(urlDatabase, "laboratorios", "saucr.120");
             System.out.println("La conexión se realizo sin problemas! =) ");
         } catch (Exception e) {
             System.out.println("Ocurrio un error : " + e.getMessage());
@@ -74,15 +74,14 @@ public class ConexionPosgres {
             p1.setPrecio(rs.getInt("precioT"));
             p1.setDescripcion(rs.getString("descripcionT"));
             p1.setCantStock(rs.getInt("cantstockT"));
+            p1.setTipo(rs.getInt("tipoT"));
             p1.setEstado(rs.getInt("estadoT"));
-            
-            
+           
              listaProducto.add(p1);
              
          }
          rs.close();
          stmt.close();
-         conSQL.close();
       } catch ( Exception e ) {
          System.err.println( e.getClass().getName()+": "+ e.getMessage() );
          System.exit(0);
