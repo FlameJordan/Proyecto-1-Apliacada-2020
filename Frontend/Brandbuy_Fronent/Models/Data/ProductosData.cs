@@ -2,7 +2,10 @@
 using Npgsql;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Brandbuy_Fronent.Models.Data
@@ -11,12 +14,26 @@ namespace Brandbuy_Fronent.Models.Data
     {
         public IConfiguration Configuration { get; }
 
+        private string url { get; set; }
+        private WebRequest web { get; set; }
+        private HttpWebResponse resp { get; set; }
+        private HttpWebRequest req { get; set; }
+
         public ProductosData(IConfiguration configuration)
         {
             Configuration = configuration;
+            url = "http://localhost:55124/api/Producto";
         }
 
-       
+        public void conexionApi(string parametros, string metodo)
+        {
+            string dir = String.Format(url + parametros);
+            req = (HttpWebRequest)WebRequest.Create(dir);
+            req.ContentType = "application/json";
+            req.Method = metodo;
+        }
+
+
         public List<Productos> ListarProductos()
         {
             List<Productos> productos = new List<Productos>();
@@ -50,7 +67,7 @@ namespace Brandbuy_Fronent.Models.Data
                             System.Diagnostics.Debug.WriteLine("repuesta****VEEEEEEEEEEEEEEEEEEEEER*********" + temp.idCont);
 
                             productos.Add(temp);
-                            idCont=idCont+1;
+                            idCont = idCont+1;
                         }
 
                     }
@@ -287,7 +304,7 @@ namespace Brandbuy_Fronent.Models.Data
             {
                 connection.Open();
 
-                string sql = $"select from realizarCompra('{idC}')";
+                string sql = $"select * from realizarCompra('{idC}')";
 
                 using (var command = new NpgsqlCommand(sql, connection))
                 {
@@ -295,7 +312,44 @@ namespace Brandbuy_Fronent.Models.Data
                     {
                         while (dataReader.Read())
                         {
-                            System.Diagnostics.Debug.WriteLine("repuesta*************");
+
+                            Productos temp = new Productos();
+                            temp.idproducto = dataReader["idproductoT"].ToString();
+                            temp.idempresa = dataReader["idempresaT"].ToString();
+                            temp.cantSolicit = Convert.ToInt32(dataReader["cantT"].ToString());
+
+                            if(temp.idempresa != "4") {
+                                string responseBody = "";
+                                conexionApi("/RebajaStock", "POST");
+                                string json = JsonSerializer.Serialize(temp);
+                                System.Diagnostics.Debug.WriteLine("json*************" + json);
+                                StreamWriter stream = new StreamWriter(req.GetRequestStream());
+
+                                stream.Write(json);
+                                stream.Flush();
+                                stream.Close();
+
+                                try
+                                {
+                                    using (WebResponse response = req.GetResponse())
+                                    {
+                                        using (Stream strReader = response.GetResponseStream())
+                                        {
+                                            if (strReader == null) System.Diagnostics.Debug.WriteLine("NULL"); ;
+                                            using (StreamReader objReader = new StreamReader(strReader))
+                                            {
+                                                responseBody = objReader.ReadToEnd();
+                                                // Do something with responseBody
+                                                System.Diagnostics.Debug.WriteLine("repuesta*************" + responseBody);
+                                            }
+                                        }
+                                    }
+                                }
+                                catch (WebException ex)
+                                {
+                                    System.Diagnostics.Debug.WriteLine("**********error*************");
+                                }
+                            }
 
                         }
 
@@ -303,6 +357,7 @@ namespace Brandbuy_Fronent.Models.Data
                 }
                 connection.Close();
             }
+           
         }
 
         public List<Productos> ListarProductosBuscados(string idT, string idC)

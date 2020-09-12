@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Brandbuy_Fronent.Models;
@@ -18,9 +19,12 @@ namespace Brandbuy_Fronent.Controllers
 
         public IConfiguration Configuration { get; }
 
+
+
         public ProductoController(IConfiguration configuration)
         {
             this.Configuration = configuration;
+            
         }
 
         public ActionResult Index()
