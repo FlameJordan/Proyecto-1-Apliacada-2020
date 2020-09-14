@@ -1,0 +1,131 @@
+create table Empresa (
+	idEmpresa serial PRIMARY KEY,
+	nombre Varchar (100)  NOT NULL,
+	clave VARCHAR ( 60 ) NOT NULL,
+	correo varchar(100) not null
+);
+
+
+create or replace FUNCTION registrarClaveDeEmpresa(param_clave varchar(60), param_empresa VARCHAR ( 100 ), param_correo varchar(100))
+RETURNS boolean
+AS $BODY$
+begin
+	Insert into empresa (nombre, clave, correo) values (param_empresa, param_clave, param_correo);
+	return true;
+end
+$BODY$
+LANGUAGE plpgsql;
+
+
+
+create or replace FUNCTION verificarValidezClave(param_clave varchar(60))
+RETURNS boolean
+AS $BODY$
+begin
+	if (exists(select * from empresa where clave = param_clave)) then
+		return false;
+	else 
+		return true;
+	end if;
+end
+$BODY$
+LANGUAGE plpgsql;
+
+
+create or replace FUNCTION validarConexionConClave(param_clave varchar(60), param_empresa varchar(100))
+RETURNS boolean
+AS $BODY$
+begin
+	if (exists(select * from empresa where clave = param_clave and nombre = param_empresa)) then
+		return true;
+	else 
+		return false;
+	end if;
+end
+$BODY$
+LANGUAGE plpgsql;
+
+
+create or replace FUNCTION obtenerClaveExistente(param_nombre_empresa varchar(100), param_correo_empresa varchar(100)) 
+returns varchar(60)
+AS $BODY$
+begin
+	if exists(select clave from empresa where nombre = param_nombre_empresa and correo = param_correo_empresa) then
+		return (select clave from empresa where nombre = param_nombre_empresa and correo = param_correo_empresa);
+	else
+		return 'No Encontrada';
+	end if;
+end
+$BODY$
+LANGUAGE plpgsql;
+
+
+
+create or replace FUNCTION obtenerIdEmpresa(param_clave varchar(60))
+RETURNS integer
+AS $BODY$
+begin
+	return (select idempresa from empresa where clave = param_clave);
+end
+$BODY$
+LANGUAGE plpgsql;
+
+
+create or replace FUNCTION obtenerProductosProveedorParaValidacionDeCambios(param_id_empresa int)
+RETURNS TABLE(idproductoT INT ,nombreT VARCHAR(100),precioT INT,descripcionT VARCHAR(100),
+			  tipoT INT, imagenT VARCHAR(200), cantstockT INT) AS
+$BODY$
+DECLARE
+    reg RECORD;
+BEGIN
+    FOR REG IN SELECT idproducto,nombre,precio,descripcion,tipo,imagen,cantstock
+FROM producto WHERE idempresa=param_id_empresa LOOP
+        idproductoT := reg.idproducto;
+		nombreT := reg.nombre;
+		precioT := reg.precio;
+		descripcionT := reg.descripcion;
+		tipoT := reg.tipo;
+		imagenT := reg.imagen;
+		cantstockT := reg.cantstock;
+        RETURN NEXT;
+    END LOOP;
+    RETURN;
+END
+$BODY$
+LANGUAGE plpgsql;
+select * from producto;
+
+select * from empresa;
+
+
+create or replace FUNCTION registrarProductoDeProveedor(param_producto_id int, param_producto_nombre varchar(100), param_tipo int, param_producto_cantidad int, param_producto_imagen varchar(200), param_producto_precio int, param_producto_descripcion varchar(100), param_id_empresa int) 
+returns boolean
+AS $BODY$
+begin
+	insert into producto (idproducto, idempresa, nombre, precio, descripcion, tipo, imagen, cantstock, estado) values (param_producto_id, param_id_empresa, param_producto_nombre, param_producto_precio, param_producto_descripcion, param_tipo, param_producto_imagen, param_producto_cantidad, 0);
+	return true;
+end
+$BODY$
+LANGUAGE plpgsql;
+
+
+create or replace FUNCTION eliminarProductoDeProveedor(param_producto_id int, param_id_empresa int) 
+returns boolean
+AS $BODY$
+begin
+	delete from producto where idproducto = param_producto_id and idempresa = param_id_empresa;
+	return true;
+end
+$BODY$
+LANGUAGE plpgsql;
+
+
+create or replace FUNCTION actualizarProductoDeProveedor(param_producto_id int, param_producto_nombre varchar(100), param_tipo int, param_producto_cantidad int, param_producto_imagen varchar(200), param_producto_precio int, param_producto_descripcion varchar(100), param_id_empresa int) 
+returns boolean
+AS $BODY$
+begin
+	update producto set nombre = param_producto_nombre, precio = param_producto_precio, descripcion = param_producto_descripcion, tipo = param_tipo, imagen = param_producto_imagen, cantstock = param_producto_cantidad, estado = 0 where idproducto = param_producto_id and idempresa = param_id_empresa;
+	return true;
+end
+$BODY$
+LANGUAGE plpgsql;
