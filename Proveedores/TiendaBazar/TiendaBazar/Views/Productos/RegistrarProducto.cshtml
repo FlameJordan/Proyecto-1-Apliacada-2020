@@ -1,0 +1,52 @@
+﻿@{
+    ViewBag.Title = "Registrar Producto";
+}
+
+
+<h2>@ViewBag.Title</h2>
+
+<form action="/Productos/RegistrarProducto" method="post" enctype="multipart/form-data">
+    <div>
+        <div class="form-group">
+            <label for="nombre">Nombre</label>
+            <input id="nombre" name="nombre" class="form-control" type="text" placeholder="Nombre" required>
+        </div>
+
+        <div class="form-group">
+            <label for="cantidadStock">Cantidad en Stock</label>
+            <input id="cantidadStovk" name="cantidadStock" class="form-control" type="number" placeholder="Cantidad en Stock" required>
+        </div>
+
+        <div class="form-group">
+            <label for="precio">Precio</label>
+            <input id="precio" name="precio" class="form-control" type="number" value="@ViewBag.precio" required>
+        </div>
+
+        <div>
+            <label for="tipo">Tipo:</label>
+            <select id="tipo" name="tipo"class="form-control" required>
+                <option value="1" selected>Arma</option>
+                <option value="2">Ropa</option>
+                <option value="3">Tecnologia</option>
+                <option value="4">Alimento</option>
+                <option value="5">Farmaco</option>
+                <option value="6">Servicio</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="descripcion">Descripcion</label>
+            <textarea class="form-control" rows="5" id="descripcion" name="descripcion" required>@ViewBag.descripcion</textarea>
+        </div>
+
+        <div class="form-group">
+            <input type="file" class="custom-file-input" id="imagen" name="imagen" accept=".png, .jpg, .jpeg" required>
+            <label class="custom-file-label" for="imagen">Seleccione una imagen</label>
+        </div>
+
+        <div>
+            <button type="submit" class="btn btn-primary mb-2">Registrar</button>
+            <button type="button" class="btn btn-secondary  mb-2" onclick="location.href='@Url.Action("Index", "Home")'">Cancelar</button>
+        </div>
+    </div>
+</form>

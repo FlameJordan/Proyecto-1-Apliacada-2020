@@ -1,0 +1,69 @@
+﻿@model PagedList.IPagedList<TiendaLibreria.Models.Producto>
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+<h5>
+    @Html.ActionLink("Nuevo Producto", "RegistrarProducto")
+</h5>
+
+@using (Html.BeginForm("VerProductos", "Productos", FormMethod.Get))
+{
+    <p>
+        Buscar: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
+        <input type="submit" value="Search" />
+    </p>
+}
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.ActionLink("Nombre", "VerProductos", new { sortOrder = ViewBag.NameSortParm })
+        </th>
+        <th>
+            @Html.ActionLink("Cantidad Stock", "VerProductos", new { sortOrder = ViewBag.DateSortParm })
+
+        </th>
+        <th>
+            @Html.ActionLink("Precio", "VerProductos", new { sortOrder = ViewBag.PrecioSortParm })
+        </th>
+        <th>
+            <p>Descripcion</p>
+        </th>
+        <th>
+            <p>Imagen</p>
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Nombre)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CantidadStock)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Precio)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Descripcion)
+        </td>
+        <td>
+            <img class="card-img-top responsive" id="imgProducto" src="~/img/@item.Imagen" alt="No se pudo cargar" style="display: flex; align-items: center; height: 150px; width: 150px;">
+        </td>
+        <td>
+            @Html.ActionLink("Actualizar", "ActualizarProducto", new { id = item.Id })
+            @Html.ActionLink("Eliminar", "EliminarProducto", new { id = item.Id, page = Model.PageNumber })
+        </td>
+    </tr>
+    }
+
+</table>
+
+<br />
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("VerProductos",
+    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
