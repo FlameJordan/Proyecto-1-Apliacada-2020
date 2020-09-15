@@ -22,7 +22,7 @@ namespace Brandbuy_Fronent.Models.Data
         public ProductosData(IConfiguration configuration)
         {
             Configuration = configuration;
-            url = "http://localhost:55124/api/Producto";
+            url = "https://serviciosbrandbuyapi20200914152105.azurewebsites.net/api";
         }
 
         public void conexionApi(string parametros, string metodo)
@@ -320,7 +320,7 @@ namespace Brandbuy_Fronent.Models.Data
 
                             if(temp.idempresa != "4") {
                                 string responseBody = "";
-                                conexionApi("/RebajaStock", "POST");
+                                conexionApi("/Stock", "POST");
                                 string json = JsonSerializer.Serialize(temp);
                                 System.Diagnostics.Debug.WriteLine("json*************" + json);
                                 StreamWriter stream = new StreamWriter(req.GetRequestStream());
