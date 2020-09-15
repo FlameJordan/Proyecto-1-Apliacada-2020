@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30413.136
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiciosBrandBuy.Api", "ServiciosBrandBuy.Api\ServiciosBrandBuy.Api.csproj", "{48534024-5074-45F5-9553-F16A082DEEDA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{98797C95-FDC4-4758-87F5-3E87D7BCB71C} = {98797C95-FDC4-4758-87F5-3E87D7BCB71C}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiciosBrandBuy.WebService", "ServiciosBrandBuy.WebService\ServiciosBrandBuy.WebService.csproj", "{98797C95-FDC4-4758-87F5-3E87D7BCB71C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{48534024-5074-45F5-9553-F16A082DEEDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48534024-5074-45F5-9553-F16A082DEEDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48534024-5074-45F5-9553-F16A082DEEDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48534024-5074-45F5-9553-F16A082DEEDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98797C95-FDC4-4758-87F5-3E87D7BCB71C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98797C95-FDC4-4758-87F5-3E87D7BCB71C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98797C95-FDC4-4758-87F5-3E87D7BCB71C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98797C95-FDC4-4758-87F5-3E87D7BCB71C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {46EBA925-8D60-433A-BED4-725C4E25CDDF}
+	EndGlobalSection
+EndGlobal
