@@ -60,7 +60,7 @@ public class MainWindow extends JFrame implements ActionListener {
     private JButton jbActivar;
     private Session session;
     private final String username = "brandbuy777@gmail.com";
-    private final String password = "brandbuypass";
+    private final String password = "veguetita777";
 
     public void init() {
 
@@ -96,6 +96,11 @@ public class MainWindow extends JFrame implements ActionListener {
         this.jComboTipos.addItem("Alimento");
         this.jComboTipos.addItem("Farmaco");
         this.jComboTipos.addItem("Servicio");
+        this.jComboTipos.addItem("Libreria");
+        this.jComboTipos.addItem("Juguetes");
+        this.jComboTipos.addItem("Higiene");
+        this.jComboTipos.addItem("Cocina");
+        this.jComboTipos.addItem("Decoracion");
         this.jComboTipos.setBounds(600, 40, 130, 20);
         this.jbActivar.setBounds(460, 80, 130, 30);
         this.jbDeshabilitar = new JButton("Desactivar");
@@ -327,6 +332,21 @@ public class MainWindow extends JFrame implements ActionListener {
             case "Servicio":
                 tipoInt = 6;
                 break;
+            case "Libreria":
+                tipoInt = 7;
+                break;
+            case "Juguetes":
+                tipoInt = 8;
+                break;
+            case "Higiene":
+                tipoInt = 9;
+                break;
+            case "Cocina":
+                tipoInt = 10;
+                break;
+            case "Decoracion":
+                tipoInt = 11;
+                break;
             default:
                 tipoInt = 0;
                 break;
@@ -440,7 +460,7 @@ public class MainWindow extends JFrame implements ActionListener {
                                         String correo = rs.getString("correos");
                                         Main.con.conSQL.commit();
 
-                                        notificacion(correo, p.getIdProducto(), p.getNombre(),p.getIdEmpresa());
+                                        notificacion(correo, p.getIdProducto(), p.getNombre(), p.getIdEmpresa());
                                     } else {
                                         p.setEstado(1);
                                     }
@@ -521,7 +541,7 @@ public class MainWindow extends JFrame implements ActionListener {
 
             // Define message
             String mensaje = "Los siguentes productos fueron desactivados: " + "\n";
-            mensaje = mensaje + "ID Empresa: " + idEmpresa+ "\n";
+            mensaje = mensaje + "ID Empresa: " + idEmpresa + "\n";
             mensaje = mensaje + "codigo: " + id + ", ";
             mensaje = mensaje + "nombre: " + nombre + "\n";
 
