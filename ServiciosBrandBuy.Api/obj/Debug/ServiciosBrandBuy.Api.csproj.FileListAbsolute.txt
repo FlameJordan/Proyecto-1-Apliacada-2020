@@ -113,7 +113,6 @@ C:\Users\Steven\source\repos\ServiciosBrandBuy\ServiciosBrandBuy.Api\bin\System.
 C:\Users\Steven\source\repos\ServiciosBrandBuy\ServiciosBrandBuy.Api\bin\System.Web.WebPages.Razor.xml
 C:\Users\Steven\source\repos\ServiciosBrandBuy\ServiciosBrandBuy.Api\bin\Antlr3.Runtime.pdb
 C:\Users\Steven\source\repos\ServiciosBrandBuy\ServiciosBrandBuy.Api\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
-C:\Users\Steven\source\repos\ServiciosBrandBuy\ServiciosBrandBuy.Api\obj\Debug\ServiciosBrandBuy.Api.csprojAssemblyReference.cache
 C:\Users\Steven\source\repos\ServiciosBrandBuy\ServiciosBrandBuy.Api\obj\Debug\ServiciosBrandBuy.Api.csproj.CoreCompileInputs.cache
 C:\Users\Steven\source\repos\ServiciosBrandBuy\ServiciosBrandBuy.Api\obj\Debug\ServiciosBrandBuy.Api.csproj.CopyComplete
 C:\Users\Steven\source\repos\ServiciosBrandBuy\ServiciosBrandBuy.Api\obj\Debug\ServiciosBrandBuy.Api.dll

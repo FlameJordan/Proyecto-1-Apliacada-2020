@@ -262,10 +262,11 @@ namespace ServiciosBrandBuy.Api.Models
         public Boolean actualizarStockProveedor(Productos datosDeStock) 
         {
 
-            this.conectarMySQL.Open();
+            
 
             if (Convert.ToInt32(datosDeStock.idempresa) == 2)
             {
+                this.conectarMySQL.Open();
                 MySqlCommand com = new MySqlCommand("sp_actualizarStockBazar", conectarMySQL);
                 com.CommandType = System.Data.CommandType.StoredProcedure;
 
@@ -273,11 +274,13 @@ namespace ServiciosBrandBuy.Api.Models
                 com.Parameters.AddWithValue("@cantidad", datosDeStock.cantSolicit);
 
                 com.ExecuteNonQuery();
+                this.conectarMySQL.Close();
             }
             else 
             {
                 if (Convert.ToInt32(datosDeStock.idempresa) == 3)
                 {
+                    this.conectarMySQL.Open();
                     MySqlCommand com = new MySqlCommand("sp_actualizarStockLibreria", conectarMySQL);
                     com.CommandType = System.Data.CommandType.StoredProcedure;
 
@@ -285,9 +288,11 @@ namespace ServiciosBrandBuy.Api.Models
                     com.Parameters.AddWithValue("@cantidad", datosDeStock.cantSolicit);
 
                     com.ExecuteNonQuery();
+                    this.conectarMySQL.Close();
                 }
                 else if (Convert.ToInt32(datosDeStock.idempresa) == 4)
                 {
+                    this.conectarMySQL.Open();
                     MySqlCommand com = new MySqlCommand("sp_actualizarStockComputadora", conectarMySQL);
                     com.CommandType = System.Data.CommandType.StoredProcedure;
 
@@ -295,10 +300,11 @@ namespace ServiciosBrandBuy.Api.Models
                     com.Parameters.AddWithValue("@cantidad", datosDeStock.cantSolicit);
 
                     com.ExecuteNonQuery();
+                    this.conectarMySQL.Close();
                 }
             }
 
-            this.conectarMySQL.Close();
+            
             return true;
         }
     }
