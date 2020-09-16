@@ -48,16 +48,128 @@ CREATE TABLE sugerencias(
 	cantidadClicks INT NOT NULL,
 	PRIMARY KEY(idproducto,idempresa,idcliente)
 );
-
 ---------------------------------------
 --INSERTS--
 Insert into Clientes (nombre, contrasena, email) values ('Graciela', 'gp@gmail.com', '123' );
 INSERT INTO PRODUCTO (idProducto, idEmpresa, nombre, precio, descripcion, tipo, imagen, cantStock, estado) 
-	VALUES(7, 2,'Samsung Galaxy Fold3',1675000,'Movil 166hz 4k', 3, 'fold3.png', 5,1);
-INSERT INTO tipoProducto (nombreTipo) VALUES ('Arma'),('Ropa'),('Tecnología'),('Alimento'),('Fármaco'),('Servicio')
-							
-update Producto set  imagen='SG10.png' where idProducto='2'
---FUNCIONES--
+	VALUES(2, 1,'Mascarillas',1000,'Mascarillas antifluidos, desechables', 9, 'mascarillas.jpg', 555,1)
+	,(3, 1,'Frutas deshidratadas',2500,'Fruta deshidratada traída de Ingletarra', 4, 'frutaDes.jpg', 100,1)
+	,(4, 1,'Jabón de baño',675,'Limpieza profunda Protex', 9, 'jaboncito.png', 20,1)
+	,(5, 1,'Tennis Sport',45000,'Para salir volando cuando quieras correr', 2, 'tennisPuma.jpg', 50,1)
+	,(6, 1,'Portatil HP',475000,'Portatil HP blanca, 15.6"', 3, 'compuHP.jpg', 5,1)
+	,(7, 1,'Abrigo',25000,'Abrigo de lana color gris', 2, 'abrigoGris.jpg', 24,1)
+	,(8, 1,'PeptoBismol',20000,'Para el dolor de estomago 2x1', 5, 'pepto.jpg', 30,1)
+	,(9, 1,'NesCafe',5000,'Cafecito para las mañanas', 4, 'nescafe.jpg', 52,1)
+	,(10, 1,'Alka-Seltzer Extreme',7000,'Para la goma', 5, 'alka.jpg', 10,1);
+	
+-------------------------------------------------------------
+-----------------------BACKEND-------------------------------
+-- CAMBIARESTADOPRODUCTO
+
+create or replace FUNCTION cambiarEstadoProducto(idProductoE int,idEmpresaE int)
+RETURNS SETOF INTEGER 
+AS $BODY$
+declare estadoActual int;
+begin
+	estadoActual := (select estado FROM producto where idProducto=idProductoE AND idEmpresa=idEmpresaE);
+	if (estadoActual=1) then
+		UPDATE producto set estado=0 where idProducto=idProductoE AND idEmpresa=idEmpresaE;
+		return query select 0 as resultado;
+	else 
+		UPDATE producto set estado=1 where idProducto=idProductoE AND idEmpresa=idEmpresaE;
+		return query select 1 as resultado;
+	end if;
+end
+$BODY$
+LANGUAGE plpgsql;
+select cambiarEstadoProducto(1,2)
+-- CAMBIARESTADOTODALAEMPRESA--
+------------------------------------------------------------------
+--OBTENER CORREO EMPRESA
+create or replace FUNCTION obtenerCorreo(idempresaE INT)
+RETURNS TABLE (correoS VARCHAR(100))
+AS $BODY$
+DECLARE
+reg RECORD;
+begin
+	FOR REG IN SELECT correo from empresa 
+		where idempresa = idempresaE 
+		LOOP
+		correoS:= reg.correo;
+		RETURN NEXT;
+		END LOOP;
+    RETURN;
+end
+$BODY$
+LANGUAGE plpgsql;
+------------------------------------------------------------------
+--OBTENERPRODUCTOS--
+create or replace FUNCTION obtenerProductos()
+RETURNS TABLE(idproductoT INT ,idempresaT INT,nombreT VARCHAR(100),precioT INT,descripcionT VARCHAR(100),cantstockT INT ,estadoT INT,tipoT INT) AS
+$BODY$
+DECLARE
+    reg RECORD;
+BEGIN
+    FOR REG IN SELECT idproducto,idempresa,nombre,precio,descripcion,cantstock,estado,tipo
+FROM producto LOOP
+        idproductoT := reg.idproducto;
+        idempresaT   := reg.idempresa;
+		nombreT := reg.nombre;
+		precioT := reg.precio;
+		descripcionT := reg.descripcion;
+		cantstockT := reg.cantstock;
+		estadoT := reg.estado;
+		tipoT := reg.tipo;
+        RETURN NEXT;
+    END LOOP;
+    RETURN;
+END
+$BODY$
+LANGUAGE plpgsql;
+-------------------------------------------------------------
+----------------------------------------------------------
+--cambiarEstadoTodoslosProductos--
+create or replace FUNCTION cambiarEstadoTodosLosProductos(idEmpresaE int,estadoE int)
+RETURNS SETOF INTEGER 
+AS $BODY$
+begin
+	if (estadoE=1) then
+		UPDATE producto set estado=1 where idEmpresa=idEmpresaE;
+		return query select 1 as resultado;
+	else 
+		UPDATE producto set estado=0 where idEmpresa=idEmpresaE;
+		return query select 0 as resultado;
+	end if;
+end
+$BODY$
+LANGUAGE plpgsql;
+--------------------------------------------------------------
+-----------------------BACKEND-------------------------------
+-----------------------FRONTEND------------------------------
+--OBTENERPRODUCTOS--
+create or replace FUNCTION obtenerProductos()
+RETURNS TABLE(idproductoT INT ,idempresaT INT,nombreT VARCHAR(100),precioT INT,descripcionT VARCHAR(100),cantstockT INT ,estadoT INT,tipoT INT) AS
+$BODY$
+DECLARE
+    reg RECORD;
+BEGIN
+    FOR REG IN SELECT idproducto,idempresa,nombre,precio,descripcion,cantstock,estado,tipo
+FROM producto LOOP
+        idproductoT := reg.idproducto;
+        idempresaT   := reg.idempresa;
+		nombreT := reg.nombre;
+		precioT := reg.precio;
+		descripcionT := reg.descripcion;
+		cantstockT := reg.cantstock;
+		estadoT := reg.estado;
+		tipoT := reg.tipo;
+        RETURN NEXT;
+    END LOOP;
+    RETURN;
+END
+$BODY$
+LANGUAGE plpgsql;
+-------------------------------------------------------------
 create or replace FUNCTION registrarClientes(nombreC varchar(100), emailC VARCHAR ( 255 ), contrasenaC VARCHAR ( 50 ))
 RETURNS SETOF INTEGER 
 AS $BODY$
@@ -73,9 +185,7 @@ begin
 end
 $BODY$
 LANGUAGE plpgsql;
-select registrarClientes ('GraciPorras', 'delosangeles@gmail.com', '1234');
 --INICIARSESION--
-
 create or replace FUNCTION iniciarSesion(nombreC varchar(100),contrasenaC VARCHAR (50))
 RETURNS SETOF INTEGER 
 AS $BODY$
@@ -91,32 +201,7 @@ begin
 end
 $BODY$
 LANGUAGE plpgsql;
-select iniciarSesion ('GraciPorras', '1234');
-
---OBTENERPRODUCTOS--
-create or replace FUNCTION obtenerProductos()
-RETURNS TABLE(idproductoT INT ,idempresaT INT,nombreT VARCHAR(100),precioT INT,descripcionT VARCHAR(100),cantstockT INT ,estadoT INT) AS
-$BODY$
-DECLARE
-    reg RECORD;
-BEGIN
-    FOR REG IN SELECT idproducto,idempresa,nombre,precio,descripcion,cantstock,estado
-FROM producto LOOP
-        idproductoT := reg.idproducto;
-        idempresaT   := reg.idempresa;
-		nombreT := reg.nombre;
-		precioT := reg.precio;
-		descripcionT := reg.descripcion;
-		cantstockT := reg.cantstock;
-		estadoT := reg.estado;
-        RETURN NEXT;
-    END LOOP;
-    RETURN;
-END
-$BODY$
-LANGUAGE plpgsql;
-select obtenerProductos();
-
+select * from sugerencias
 --DETALLEPRODUCTO--
 create or replace FUNCTION detalleProducto(idProducto_ int, idEmpresa_ int,idclienteE INT)
 RETURNS TABLE(idproductoT INT ,idempresaT INT,nombreT VARCHAR(100),precioT INT,descripcionT VARCHAR(100),
@@ -150,69 +235,7 @@ FROM producto WHERE idproducto=idProducto_ AND idempresa=idEmpresa_ LOOP
 END
 $BODY$
 LANGUAGE plpgsql;
-select *from detalleProducto(7, 2,2);
-select * from producto
-select * from sugerencias
---OBTENERPRODUCTOS--
-create or replace FUNCTION obtenerProductos()
-RETURNS TABLE(idproductoT INT ,idempresaT INT,nombreT VARCHAR(100),precioT INT,descripcionT VARCHAR(100),cantstockT INT ,estadoT INT) AS
-$BODY$
-DECLARE
-    reg RECORD;
-BEGIN
-    FOR REG IN SELECT idproducto,idempresa,nombre,precio,descripcion,cantstock,estado
-FROM producto LOOP
-        idproductoT := reg.idproducto;
-        idempresaT   := reg.idempresa;
-		nombreT := reg.nombre;
-		precioT := reg.precio;
-		descripcionT := reg.descripcion;
-		cantstockT := reg.cantstock;
-		estadoT := reg.estado;
-        RETURN NEXT;
-    END LOOP;
-    RETURN;
-END
-$BODY$
-LANGUAGE plpgsql;
-select * from obtenerProductos();
 
--- CAMBIARESTADOPRODUCTO
-
-create or replace FUNCTION cambiarEstadoProducto(idProductoE int,idEmpresaE int)
-RETURNS SETOF INTEGER 
-AS $BODY$
-declare estadoActual int;
-begin
-	estadoActual := (select estado FROM producto where idProducto=idProductoE AND idEmpresa=idEmpresaE);
-	if (estadoActual=1) then
-		UPDATE producto set estado=0 where idProducto=idProductoE AND idEmpresa=idEmpresaE;
-		return query select 0 as resultado;
-	else 
-		UPDATE producto set estado=1 where idProducto=idProductoE AND idEmpresa=idEmpresaE;
-		return query select 1 as resultado;
-	end if;
-end
-$BODY$
-LANGUAGE plpgsql;
-select cambiarEstadoProducto(1,2)
-
--- CAMBIARESTADOTODALAEMPRESA--
-create or replace FUNCTION cambiarEstadoTodosLosProductos(idEmpresaE int,estadoE int)
-RETURNS SETOF INTEGER 
-AS $BODY$
-begin
-	if (estadoE=1) then
-		UPDATE producto set estado=1 where idEmpresa=idEmpresaE;
-		return query select 1 as resultado;
-	else 
-		UPDATE producto set estado=0 where idEmpresa=idEmpresaE;
-		return query select 0 as resultado;
-	end if;
-end
-$BODY$
-LANGUAGE plpgsql;
-SELECT cambiarEstadoTodosLosProductos(2,0)
 
 --OBTENERPRODUCTOSAPROBADOS--
 --Agregué hoy
@@ -235,13 +258,8 @@ FROM producto where estado=1 LOOP
 END
 $BODY$
 LANGUAGE plpgsql;
-
-select AgregarCarrito(2, 2, 2, 1);
-select * from clientes;
-select * from producto;
-select * from carrito;
-
-
+---------------------------------------------------------------
+----AgregarCarrito----
 create or replace FUNCTION AgregarCarrito(idproductoT INT,idempresaT INT, idClienteT INT, cantidad INT)
 RETURNS SETOF INTEGER 
 AS $BODY$
@@ -256,12 +274,10 @@ begin
 end
 $BODY$
 LANGUAGE plpgsql;
-select * from AgregarCarrito(3,2,2,1)
-select * from producto
 -------------------------------------------------------------------
 --OBTENER CARRITO DE UN CLIENTE
 create or replace FUNCTION obtenerProductosCarritos(idClienteE INT)
-RETURNS TABLE(idcontT INT,idclienteT INT,idproductoT INT,idempresaT INT,nombreT VARCHAR(100),precioT INT,imagenT VARCHAR(200),cantidadProductosT INT,cantidadStockT INT) AS
+RETURNS TABLE(idclienteT INT,idproductoT INT,idempresaT INT,nombreT VARCHAR(100),precioT INT,imagenT VARCHAR(200),cantidadProductosT INT,cantidadStockT INT) AS
 $BODY$
 DECLARE
     reg RECORD;
@@ -269,7 +285,7 @@ BEGIN
     FOR REG IN select ca.idcliente,ca.cant,ca.idproducto,ca.idempresa,p.nombre,p.precio,p.imagen, p.cantstock from carrito as ca 
 			join producto as p ON ca.idproducto = p.idproducto
 				join clientes as c ON ca.idcliente = c.idcliente
-					where ca.idcliente = idClienteE LOOP
+					where ca.idcliente = idClienteE and ca.idempresa = p.idempresa LOOP
 					idclienteT 	:= reg.idcliente;
 					idproductoT := reg.idproducto;
 					idempresaT := reg.idempresa;
@@ -285,6 +301,10 @@ END
 $BODY$
 LANGUAGE plpgsql; 
 select * from obtenerProductosCarritos(2)
+select * from producto
+select * from carrito
+update
+
 ------------------------------------------------------------------
 --detalleCompraProducto esta en veremos
 create or replace FUNCTION detalleCompraCarrito(idClienteE INT,idEmpresaE INT,idProductoE INT,cantidadProductosE INT)
@@ -340,10 +360,6 @@ $BODY$
 LANGUAGE plpgsql;
 select from eliminarDelCarrito(3,2,2)
 ------------------------------------------------------------------
-select * from clientes;
-select * from producto;
-select * from carrito;
-------------------------------------------------------------------
 --REALIZARCOMPRA--
 create or replace FUNCTION realizarCompra(idClienteE INT)
 RETURNS SETOF INTEGER 
@@ -366,26 +382,7 @@ begin
 end
 $BODY$
 LANGUAGE plpgsql;
-------------------------------------------------------------------
---OBTENER CORREO EMPRESA
-create or replace FUNCTION obtenerCorreo(idempresaE INT)
-RETURNS TABLE (correoS VARCHAR(100))
-AS $BODY$
-DECLARE
-reg RECORD;
-begin
-	FOR REG IN SELECT correo from empresa 
-		where idempresa = idempresaE 
-		LOOP
-		correoS:= reg.correo;
-		RETURN NEXT;
-		END LOOP;
-    RETURN;
-end
-$BODY$
-LANGUAGE plpgsql;
-select correos from obtenerCorreo(2)
-------------------------------------------------------------------
+
 --AUMENTAR O DISMUNIR CANTIDAD CARRITO
 create or replace FUNCTION aumentarDisminuir(idClienteE INT,idProductoE INT,accionE INT, cantidadE INT)
 RETURNS SETOF INTEGER 
@@ -427,11 +424,7 @@ FROM tipoproducto where estado =1 LOOP
 END
 $BODY$
 LANGUAGE plpgsql;
-select * from obtenerCategorias();
 -----------------------------------------------------------------
-update producto set estado = 1 where idproducto<>0
-select * from sugerencias
-------------------------------------------------------------------
 --OBTENERPRODUCTOS SEGUN EL TIPO--
 create or replace FUNCTION obtenerProductosPorTipo(idtipo INT)
 RETURNS TABLE(idproductoT INT ,idempresaT INT,nombreT VARCHAR(100),precioT INT,imagenT VARCHAR(100)) AS
@@ -452,7 +445,6 @@ FROM producto WHERE tipo = idtipo LOOP
 END
 $BODY$
 LANGUAGE plpgsql;
-select * from obtenerProductosPorTipo(1);
 ---------------------------------------------------------
 create or replace FUNCTION obtenerProductosSugeridos(idclienteE INT)
 RETURNS TABLE(idproductoT INT ,idempresaT INT,nombreT VARCHAR(100),precioT INT,imagenT VARCHAR(100)) AS
@@ -464,7 +456,7 @@ BEGIN
 	SELECT s.idproducto,s.idempresa,p.nombre,p.precio,p.imagen  
 		FROM sugerencias as s 
 			JOIN producto as p ON p.idproducto = s.idproducto
-				WHERE idcliente =idclienteE ORDER BY(cantidadclicks) DESC LIMIT 5 LOOP
+				WHERE idcliente =idclienteE and p.estado=1 and s.idempresa = p.idempresa ORDER BY(cantidadclicks) DESC LIMIT 5 LOOP
 					idproductoT := reg.idproducto;
 					idempresaT := reg.idempresa;
 					nombreT := reg.nombre;
@@ -476,15 +468,7 @@ BEGIN
 END
 $BODY$
 LANGUAGE plpgsql;
-select * from producto
-select * from empresa 	
-SELECT * FROM tipoproducto
-
-INSERT INTO PRODUCTO (idProducto, idEmpresa, nombre, precio, descripcion, tipo, imagen, cantStock, estado) 
-	VALUES(12, 1,'Jabon protex',2000,'Jabón para lavar tus manos', 6, 'jaboncito.png', 115,1);
-update producto set idempresa=4 where tipo <>1
-update producto set nombre='Tennis Puma',precio= 35000,descripcion='Tennis para correr',imagen='tennisPuma.jpg' where idproducto = 5
-select * from obtenerProductosSugeridos(2);
+select * from obtenerProductosSugeridos(2)
 ------------------------------------------------------------------
 --OBTENERPRODUCTOS SUGERIDOS--
 create or replace FUNCTION obtenerTiposSugeridos(idclienteE INT)
@@ -512,7 +496,6 @@ BEGIN
 END
 $BODY$
 LANGUAGE plpgsql;
-select * from obtenerTiposSugeridos(2);
 --HAY QUE HACER OTRO SOLO POR CANTIDAD DE CLICKS--
 ---------------------------------------------------------
 create or replace FUNCTION obtenerProductosPorTipoSuge(tipoE INT,idclienteE INT)
@@ -545,6 +528,122 @@ FROM producto WHERE tipo = tipoE LOOP
 END
 $BODY$
 LANGUAGE plpgsql;
-select * from obtenerProductosPorTipoSuge(3,2);
---HAY QUE HACER OTRO SOLO POR CANTIDAD DE CLICKS--
 ---------------------------------------------------------
+-----------------------FRONTEND------------------------------
+--------------------------API--------------------------------
+create or replace FUNCTION registrarClaveDeEmpresa(param_clave varchar(60), param_empresa VARCHAR ( 100 ), param_correo varchar(100))
+RETURNS boolean
+AS $BODY$
+begin
+	Insert into empresa (nombre, clave, correo) values (param_empresa, param_clave, param_correo);
+	return true;
+end
+$BODY$
+LANGUAGE plpgsql;
+---------------------------------------------------------------------------
+create or replace FUNCTION verificarValidezClave(param_clave varchar(60))
+RETURNS boolean
+AS $BODY$
+begin
+	if (exists(select * from empresa where clave = param_clave)) then
+		return false;
+	else 
+		return true;
+	end if;
+end
+$BODY$
+LANGUAGE plpgsql;
+--------------------------------------------------------------------------
+create or replace FUNCTION validarConexionConClave(param_clave varchar(60), param_empresa varchar(100))
+RETURNS boolean
+AS $BODY$
+begin
+	if (exists(select * from empresa where clave = param_clave and nombre = param_empresa)) then
+		return true;
+	else 
+		return false;
+	end if;
+end
+$BODY$
+LANGUAGE plpgsql;
+
+--------------------------------------------------------------------------
+create or replace FUNCTION obtenerClaveExistente(param_nombre_empresa varchar(100), param_correo_empresa varchar(100)) 
+returns varchar(60)
+AS $BODY$
+begin
+	if exists(select clave from empresa where nombre = param_nombre_empresa and correo = param_correo_empresa) then
+		return (select clave from empresa where nombre = param_nombre_empresa and correo = param_correo_empresa);
+	else
+		return 'No Encontrada';
+	end if;
+end
+$BODY$
+LANGUAGE plpgsql;
+--------------------------------------------------------------------------
+create or replace FUNCTION obtenerIdEmpresa(param_clave varchar(60))
+RETURNS integer
+AS $BODY$
+begin
+	return (select idempresa from empresa where clave = param_clave);
+end
+$BODY$
+LANGUAGE plpgsql;
+--------------------------------------------------------------------------
+create or replace FUNCTION obtenerProductosProveedorParaValidacionDeCambios(param_id_empresa int)
+RETURNS TABLE(idproductoT INT ,nombreT VARCHAR(100),precioT INT,descripcionT VARCHAR(100),
+			  tipoT INT, imagenT VARCHAR(200), cantstockT INT) AS
+$BODY$
+DECLARE
+    reg RECORD;
+BEGIN
+    FOR REG IN SELECT idproducto,nombre,precio,descripcion,tipo,imagen,cantstock
+FROM producto WHERE idempresa=param_id_empresa LOOP
+        idproductoT := reg.idproducto;
+		nombreT := reg.nombre;
+		precioT := reg.precio;
+		descripcionT := reg.descripcion;
+		tipoT := reg.tipo;
+		imagenT := reg.imagen;
+		cantstockT := reg.cantstock;
+        RETURN NEXT;
+    END LOOP;
+    RETURN;
+END
+$BODY$
+LANGUAGE plpgsql;
+--------------------------------------------------------------------------
+create or replace FUNCTION registrarProductoDeProveedor(param_producto_id int, param_producto_nombre varchar(100), param_tipo int, param_producto_cantidad int, param_producto_imagen varchar(200), param_producto_precio int, param_producto_descripcion varchar(100), param_id_empresa int) 
+returns boolean
+AS $BODY$
+begin
+	insert into producto (idproducto, idempresa, nombre, precio, descripcion, tipo, imagen, cantstock, estado) values (param_producto_id, param_id_empresa, param_producto_nombre, param_producto_precio, param_producto_descripcion, param_tipo, param_producto_imagen, param_producto_cantidad, 0);
+	return true;
+end
+$BODY$
+LANGUAGE plpgsql;
+--------------------------------------------------------------------------
+create or replace FUNCTION eliminarProductoDeProveedor(param_producto_id int, param_id_empresa int) 
+returns boolean
+AS $BODY$
+begin
+	delete from producto where idproducto = param_producto_id and idempresa = param_id_empresa;
+	return true;
+end
+$BODY$
+LANGUAGE plpgsql;
+--------------------------------------------------------------------------
+create or replace FUNCTION actualizarProductoDeProveedor(param_producto_id int, param_producto_nombre varchar(100), param_tipo int, param_producto_cantidad int, param_producto_imagen varchar(200), param_producto_precio int, param_producto_descripcion varchar(100), param_id_empresa int) 
+returns boolean
+AS $BODY$
+begin
+	update producto set nombre = param_producto_nombre, precio = param_producto_precio, descripcion = param_producto_descripcion, tipo = param_tipo, imagen = param_producto_imagen, cantstock = param_producto_cantidad, estado = 0 where idproducto = param_producto_id and idempresa = param_id_empresa;
+	return true;
+end
+$BODY$
+LANGUAGE plpgsql;
+--------------------------API--------------------------------
+select * from sugerencias
+drop table sugerencias
+select * from producto
+update producto set imagen = 'blusa1.jpg' where idproducto = 1 and idempresa = 2
