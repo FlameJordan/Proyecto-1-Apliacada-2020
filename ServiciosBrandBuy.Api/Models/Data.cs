@@ -264,7 +264,7 @@ namespace ServiciosBrandBuy.Api.Models
 
             this.conectarMySQL.Open();
 
-            if (Convert.ToInt32(datosDeStock.idempresa) == 1)
+            if (Convert.ToInt32(datosDeStock.idempresa) == 2)
             {
                 MySqlCommand com = new MySqlCommand("sp_actualizarStockBazar", conectarMySQL);
                 com.CommandType = System.Data.CommandType.StoredProcedure;
@@ -276,7 +276,7 @@ namespace ServiciosBrandBuy.Api.Models
             }
             else 
             {
-                if (Convert.ToInt32(datosDeStock.idempresa) == 2)
+                if (Convert.ToInt32(datosDeStock.idempresa) == 3)
                 {
                     MySqlCommand com = new MySqlCommand("sp_actualizarStockLibreria", conectarMySQL);
                     com.CommandType = System.Data.CommandType.StoredProcedure;
@@ -286,7 +286,7 @@ namespace ServiciosBrandBuy.Api.Models
 
                     com.ExecuteNonQuery();
                 }
-                else if (Convert.ToInt32(datosDeStock.idempresa) == 3)
+                else if (Convert.ToInt32(datosDeStock.idempresa) == 4)
                 {
                     MySqlCommand com = new MySqlCommand("sp_actualizarStockComputadora", conectarMySQL);
                     com.CommandType = System.Data.CommandType.StoredProcedure;
