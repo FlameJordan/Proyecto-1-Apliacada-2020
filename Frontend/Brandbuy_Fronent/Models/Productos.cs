@@ -19,6 +19,6 @@ namespace Brandbuy_Fronent.Models
         public string estado { get; set; }
         public string idCont { get; set; }
         public float total { get; set; }
-        
+
     }
 }

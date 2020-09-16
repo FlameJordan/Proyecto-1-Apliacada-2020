@@ -66,15 +66,27 @@ namespace Brandbuy_Fronent.Controllers
 
         }
 
-        public ActionResult AgregarCarrito(string idP, string idE, string cant)
+        public ActionResult AgregarCarrito(string idP, string idE, string cant, string catidadesT)
         {
-            ProductosBusiness productoBusiness = new ProductosBusiness(this.Configuration);
-            var idC = (string)HttpContext.Session.GetString("idC");
-            System.Diagnostics.Debug.WriteLine("repuesta*************" + idP, idE, idC, cant);
-            productoBusiness.AgregarCarrito(idP, idE, idC, cant);
-            
+            System.Diagnostics.Debug.WriteLine("repuestaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa*************" + catidadesT);
+            if (catidadesT != "0") { 
+                ProductosBusiness productoBusiness = new ProductosBusiness(this.Configuration);
+                var idC = (string)HttpContext.Session.GetString("idC");
+               
+                productoBusiness.AgregarCarrito(idP, idE, idC, cant);
 
-            return View();
+                return View();
+            }
+            else
+            {
+                ProductosBusiness productoBusiness = new ProductosBusiness(this.Configuration);
+                Productos productos = new Productos();
+                var idC = (string)HttpContext.Session.GetString("idC");
+
+                productos = productoBusiness.DetalleProductos(idP, idE, idC);
+
+                return View("DetalleProductoView", productos);
+            }
         }
 
         public ActionResult CarritoView()

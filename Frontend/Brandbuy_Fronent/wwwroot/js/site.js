@@ -1,7 +1,7 @@
 ﻿
-function AgregarCarrito(idP, idE, cant) {
+function AgregarCarrito(idP, idE, cant, catidadesT) {
     var parametros = {
-        "idP": idP, "idE": idE, "cant": cant
+        "idP": idP, "idE": idE, "cant": cant, "catidadesT": catidadesT
     };
 
     $.ajax(
@@ -10,10 +10,14 @@ function AgregarCarrito(idP, idE, cant) {
             url: 'AgregarCarrito',
             type: 'post',
             beforeSend: function () {
-                $("#mensaje").html("Procesando, \n\ espere por favor...");
+                if (catidadesT != "0") {
+                    alert("Se agregó al carrito ");
+                } else {
+                    alert("Este artículo no se encuentra disponible ");
+                }
             },
             success: function (response) {
-                alert("Se agregó al carrito ");
+               
             }
         }
     );
@@ -22,6 +26,7 @@ function AgregarCarrito(idP, idE, cant) {
 function aumentar(c, p, t, ca, idP, idE, asc, idCantS) { // se crean la funcion y se agrega al evento onclick en en la etiqueta button con id aumentar
     cantStock = document.getElementById(idCantS).value;
     inicio = document.getElementById(c).value;
+    alert(inicio);
     var cantidad = document.getElementById(c).value = ++inicio; //se obtiene el valor del input, y se incrementa en 1 el valor que tenga.
 
     if (cantidad <= cantStock) {
@@ -55,7 +60,8 @@ function aumentar(c, p, t, ca, idP, idE, asc, idCantS) { // se crean la funcion 
 
     } else if (cantidad > cantStock) {
         alert("La cantidad deseada no está disponible");
-        document.getElementById(ca).value = document.getElementById(ca).value;
+        document.getElementById(c).value = --inicio
+        //=document.getElementById(ca).value = document.getElementById(ca).value;
     }
   
 }
@@ -63,6 +69,7 @@ function aumentar(c, p, t, ca, idP, idE, asc, idCantS) { // se crean la funcion 
 
 function disminuir(c, p, t, ca, idP, idE, asc) { // se crean la funcion y se agrega al evento onclick en en la etiqueta button con id disminuir
     inicio = document.getElementById(c).value;
+    alert(inicio);
     if (inicio > 1) {
 
         var cantidad = document.getElementById(c).value = --inicio; //se obtiene el valor del input, y se incrementa en 1 el valor que tenga.
