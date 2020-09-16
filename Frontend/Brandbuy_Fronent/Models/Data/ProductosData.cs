@@ -142,6 +142,7 @@ namespace Brandbuy_Fronent.Models.Data
                             productos.tipo = dataReader["tipoT"].ToString();
                             productos.imagen = "\\img\\"+dataReader["imagenT"].ToString();
                             productos.cantstock = Convert.ToInt32(dataReader["cantstockT"].ToString());
+                            System.Diagnostics.Debug.WriteLine("repuesta********lllllllllllllllllllllll*****" + productos.cantstock);
                             productos.estado = dataReader["estadoT"].ToString();
                         }
 
@@ -160,7 +161,7 @@ namespace Brandbuy_Fronent.Models.Data
             NpgsqlConnection conexion = new NpgsqlConnection();
 
             string cadenaDeConexion = Configuration["ConnectionStrings:DefaultConnection"];
-           
+            System.Diagnostics.Debug.WriteLine("repuesta************* idP=" + idP+"idE="+idE);
             using (var connection = new NpgsqlConnection(cadenaDeConexion))
             {
                 connection.Open();
@@ -318,7 +319,7 @@ namespace Brandbuy_Fronent.Models.Data
                             temp.idempresa = dataReader["idempresaT"].ToString();
                             temp.cantSolicit = Convert.ToInt32(dataReader["cantT"].ToString());
 
-                            if(temp.idempresa != "4") {
+                            if(temp.idempresa != "1") {
                                 string responseBody = "";
                                 conexionApi("/Stock", "POST");
                                 string json = JsonSerializer.Serialize(temp);
