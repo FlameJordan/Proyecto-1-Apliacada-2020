@@ -10,8 +10,7 @@ create table bazar(
     tipo int not null,
     imagen varchar(250) not null
 );
- select * from bazar;
- 
+
 create table libreria(
 	id int auto_increment primary key not null,
     nombreproducto varchar(200) not null,
