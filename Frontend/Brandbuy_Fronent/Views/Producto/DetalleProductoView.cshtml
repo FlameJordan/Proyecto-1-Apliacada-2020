@@ -1,0 +1,58 @@
+﻿@{
+    ViewData["Title"] = "IniciarSesion";
+    Layout = "_LayoutTienda";
+}
+@model Productos
+
+<CENTER>
+
+    <div content="width=device-widt" class="row">
+        <div class="col-sm-1"></div>
+        <div class="col-sm-4">
+            <img src="@Model.imagen" class="img-fluid" alt="Responsive image"><br>
+        </div>
+        <div class="col-sm-6">
+
+        <form asp-action="PagoView" method="POST">
+            <h1>Detalles del producto</h1><br>
+            <p>
+                @Model.nombre <br> ₡ @Model.precio <br> Descripción del producto: @Model.descripcion <br>
+                Disponibles: @Model.cantstock
+            </p><br>
+
+            <label>Cantidad</label>
+
+            <select id="cantidades" class="form-control" name="ListaSub" style="width:100px;" required>
+
+                @{
+                    var cont = 1;
+                    string cantId;
+                    var cantStock = 1;
+                }
+
+                @while (cantStock <= @Model.cantstock)
+                {
+                    cantId = "CantId" + cont;
+
+                    <option value="@cantStock"> @cantStock</option>
+
+                    cont++;
+                    cantStock++;
+                }
+
+            </select><br>
+
+
+
+            <input type="hidden" class="form-control" id="idP" name="idP" value="@Model.idproducto" />
+            <input type="hidden" class="form-control" id="idE" name="idE" value="@Model.idempresa" />
+            <input type="hidden" class="form-control" id="catidadesT" name="catidadesT" value="@Model.cantstock" />
+
+            <input type="button" name="carrito" class="btn btn-warning" value="Añadir a carrito" onclick="AgregarCarrito($('#idP').val(), $('#idE').val(), $('#cantidades').val(), $('#catidadesT').val())">
+        </form>
+        </div>
+
+        <div class="col-sm-1"></div>
+        <br>
+    </div>
+</CENTER>

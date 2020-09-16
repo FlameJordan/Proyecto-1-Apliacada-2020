@@ -1,0 +1,52 @@
+﻿@{
+    ViewBag.Title = "Conexion a Brandbuy";
+}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+
+<h2>@ViewBag.Title</h2>
+
+<div>
+    <div class="row" style="margin-top: 5em;">
+        <div class="col-4 container" style="height: auto; display: flex;">
+            <div style="display: inline-block; align-self: flex-end;">
+                <button type="button" class="btn btn-success" onclick="obtenerKey()">Solicitar Clave</button>
+            </div>
+        </div>
+        @*<div class="col-4 container" style="height: auto; display: flex;">
+            <label for="keyrecibida">Key Recibida</label>
+            <input id="keyrecibida" name="keyrecibida" class="form-control" type="text" disabled>
+        </div>*@
+        </br>
+        <div>
+            <p id="keyrecibida"></p>
+        </div>
+        </br>
+        <div>
+            <p id="mensaje"></p>
+        </div>
+    </div>
+</div>
+
+</br>
+</br>
+</br>
+
+<h2>Enviar y Actualizar Productos</h2>
+<label for="key">Ingrese la clave proporcionada al conectarse por primera vez, o si lo que desea es actualizar los productos</label>
+<form action="/Home/EnviarDatos" method="post" enctype="multipart/form-data">
+    <div>
+        <div class="form-group">
+            <label for="key">Clave</label>
+            <input id="key" name="key" class="form-control" type="text" placeholder="Clave" required>
+        </div>
+
+        <div>
+            <button type="submit" class="btn btn-primary mb-2">Aceptar</button>
+        </div>
+        </br>
+        <div>
+            <p>@ViewBag.mensaje</p>
+        </div>
+    </div>
+</form>

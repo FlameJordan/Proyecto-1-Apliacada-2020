@@ -84,8 +84,8 @@ public class ConexionPosgres {
          stmt.close();
       } catch ( Exception e ) {
          System.err.println( e.getClass().getName()+": "+ e.getMessage() );
-          
-         
+        select();
+      System.out.println("Volviendo a intentar conexion");
       }
       System.out.println("Operation done successfully");
       
